@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
@@ -8,8 +9,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static('public')); // to serve static files, so for the static files like css, js, images etc. u need to give the relative path
 
+
 app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/signup.html");  
+    res.sendFile(__dirname + "/views/signup.html");  
 });
 
 app.post("/", function (req, res) {
@@ -40,8 +42,8 @@ app.post("/", function (req, res) {
         ]
     };
     const jsonData = JSON.stringify(data);
-    const ApiKey = 'a2a48c028dfe87d0ecb28ffa241293fb-us14';
-    const listId = '3a0fb7f4f2';
+    const ApiKey = process.env.API_KEY;
+    const listId = process.env.LIST_ID;
 
     const url = 'https://us14.api.mailchimp.com/3.0/lists/'+listId;
     const options = {
@@ -52,10 +54,10 @@ app.post("/", function (req, res) {
     const request= https.request(url, options, function(response){
         console.log(response.statusCode);
         if(response.statusCode === 200){
-            res.sendFile(__dirname + "/success.html");
+            res.sendFile(__dirname + "/views/success.html");
         }
         else{
-            res.sendFile(__dirname + "/failure.html");
+            res.sendFile(__dirname + "/views/failure.html");
         }
         // response.on('data', function(data){
         //     console.log(JSON.parse(data));
@@ -76,7 +78,3 @@ app.post("/success", function (req, res) {
 app.listen(process.env.PORT ||  3000, () => {
     console.log('Server started on port 3000');
     });  
-
-//const ApiKey = 'a2a48c028dfe87d0ecb28ffa241293fb-us14';
-
-// const listId = '3a0fb7f4f2';
